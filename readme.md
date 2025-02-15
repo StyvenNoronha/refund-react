@@ -1,10 +1,10 @@
-#Refund React
+# Refund React
 
   
 
 Este repositório contém um projeto desenvolvido com React, TypeScript e Vite para criar uma interface de gerenciamento de reembolsos.
 
-##✨ Tecnologias Utilizadas
+## ✨ Tecnologias Utilizadas
 
 React - Biblioteca para construção de interfaces
 
