@@ -6,11 +6,11 @@ Este repositório contém um projeto desenvolvido com React, TypeScript e Vite p
 
 ## ✨ Tecnologias Utilizadas
 
-React - Biblioteca para construção de interfaces
+### React - Biblioteca para construção de interfaces
 
-TypeScript - Superset do JavaScript para tipagem estática
+###TypeScript - Superset do JavaScript para tipagem estática
 
-Vite - Ferramenta de build para aplicações front-end modernas
+###Vite - Ferramenta de build para aplicações front-end modernas
 
-Tailwind CSS - Framework utilitário para estilização
+###Tailwind CSS - Framework utilitário para estilização
 
