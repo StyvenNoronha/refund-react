@@ -46,7 +46,7 @@ export function SignUp() {
 
       await api.post("/users", data)
 
-      if(Confirm()){
+      if(confirm("deu tudo certo")){
         navigate("/")
       }
       
