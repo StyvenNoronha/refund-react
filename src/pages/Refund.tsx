@@ -37,13 +37,26 @@ export function Refund() {
 
     try {
       setIsLoading(true);
-      const data = refundSchema.parse({
-        name,
-        category,
-        amount: amount.replace(",", "."),
-      });
+      
+      if(!filename){
+        alert("colocar o comprovante")
+      }else{
+        const fileUploadForm = new FormData()
+        fileUploadForm.append("file",filename)
+        const response = await api.post("/uploads", fileUploadForm)
+        const data = refundSchema.parse({
+          name,
+          category,
+          amount: amount.replace(",", "."),
+        });
+  
+        await api.post("/refunds", { ...data, filename: response.data.filename });
+      }
 
-      await api.post("/refunds", { ...data, filename: "batata1234567896541230.pdf" });
+      
+
+
+
 
       navigate("/confirm", { state: { fromSubmit: true } });
     } catch (error) {
@@ -116,6 +129,7 @@ export function Refund() {
         </a>
       ) : (
         <Upload
+          filename={filename && filename.name}
           onChange={(e) => e.target.files && setFilename(e.target.files[0])}
           disabled={!!params.id}
         />
