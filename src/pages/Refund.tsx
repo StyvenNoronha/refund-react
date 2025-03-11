@@ -145,7 +145,7 @@ export function Refund() {
       {params.id ? (
         <a
           className="flex text-sm text-green-100  font-semibold items-center justify-center gap-2 my-6 hover:opacity-75 transition ease-linear"
-          href="https://www.google.com"
+          href={`http://localhost:3333/uploads/${fileURL}`}
           target="_blank"
         >
           <img src={fileSvg} alt="ícone de arquivo" />
