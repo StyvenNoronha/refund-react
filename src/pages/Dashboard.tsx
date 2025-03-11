@@ -18,7 +18,7 @@ const REFUND_EXAMPLE = {
   categoryImg: CATEGORIES["transport"].icon,
 };
 
-const PER_PAGE = 2;
+const PER_PAGE = 4;
 export function Dashboard() {
   const [name, setName] = useState("");
   const [page, setPage] = useState(1);

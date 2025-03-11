@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "../components/Input";
 import { Select } from "../components/Select";
 import fileSvg from "../assets/file.svg";
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
 import { Upload } from "../components/Upload";
 import { Button } from "../components/Button";
-import { useNavigate, useParams } from "react-router";
+import { data, useNavigate, useParams } from "react-router";
 
 import { api } from "../services/api";
-import { AxiosError } from "axios";
+import { Axios, AxiosError } from "axios";
 
 import { z, ZodError } from "zod";
+import { formatCurrency } from "../utils/formatCurrency";
 const refundSchema = z.object({
   name: z.string().min(3, { message: "informe o nome" }),
   category: z.string().min(1, { message: "informe a categoria" }),
@@ -25,7 +26,7 @@ export function Refund() {
   const [isLoading, setIsLoading] = useState(false);
   const [filename, setFilename] = useState<File | null>(null);
   const [category, setCategory] = useState("");
-
+  const [fileURL, setFileURL] = useState<string | null>(null)
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
 
@@ -74,6 +75,29 @@ export function Refund() {
     }
   }
 
+
+  async function feachRefund(id:string) {
+    try {
+      const response = await api.get<RefundAPIResponse>(`/refunds/${id}`)
+      setName(response.data.name)
+      setCategory(response.data.category)
+      setAmount(formatCurrency(response.data.amount))
+      setFileURL(response.data.filename)
+    } catch (error) {
+      console.log(error)
+      if(error instanceof AxiosError){
+        return alert(error.response?.data.message)
+      }
+      alert("não foi possível carregar ")
+    }
+  }
+
+  useEffect(()=>{
+    if(params.id){
+      feachRefund(params.id)
+    }
+  },[params.id])
+
   return (
     <form
       onSubmit={onSubmit}
@@ -110,7 +134,7 @@ export function Refund() {
           ))}
         </Select>
         <Input
-          type="number"
+          type="string"
           legend="Valor"
           required
           value={amount}
