@@ -23,14 +23,25 @@ export function Dashboard() {
   const [name, setName] = useState("");
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const [refund, setRefund] = useState<RefundItemProps[]>([REFUND_EXAMPLE]);
+  const [refund, setRefund] = useState<RefundItemProps[]>([]);
 
   async function fetchRefunds() {
     try {
       const response = await api.get<RefundsPaginationAPIResponse>(
         `/refunds?name=${name.trim()}&page=${page}&perPage=${PER_PAGE}`
       );
-      console.log(response.data);
+      setRefund(
+        response.data.refunds.map((refund)=>({
+            id: refund.id,
+            name: refund.user.name,
+            category: refund.name,
+            amount: formatCurrency(refund.amount),
+            categoryImg: CATEGORIES[refund.category].icon
+        }))
+      )
+
+
+      setTotalPage(response.data.pagination.totalPages)
     } catch (error) {
       console.log(error);
       if (error instanceof AxiosError){
