@@ -7,6 +7,9 @@ import { Upload } from "../components/Upload";
 import { Button } from "../components/Button";
 import { useNavigate, useParams } from "react-router";
 
+import { api } from "../services/api";
+import { AxiosError } from "axios";
+
 import { z, ZodError } from "zod";
 const refundSchema = z.object({
   name: z.string().min(3, { message: "informe o nome" }),
@@ -26,7 +29,7 @@ export function Refund() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (params.id) {
       return navigate(-1);
@@ -37,15 +40,21 @@ export function Refund() {
       const data = refundSchema.parse({
         name,
         category,
-        amount: amount.replace(",",".")
-      })
-      
+        amount: amount.replace(",", "."),
+      });
+
+      await api.post("/refunds", { ...data, filename: "batata1234567896541230.pdf" });
+
       navigate("/confirm", { state: { fromSubmit: true } });
     } catch (error) {
       console.log(error);
       if (error instanceof ZodError) {
         return alert(error.issues[0].message);
       }
+      if (error instanceof AxiosError) {
+        return alert(error.response?.data.message);
+      }
+
       alert("não foi possível realizar a solicitação");
     } finally {
       setIsLoading(false);
