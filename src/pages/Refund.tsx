@@ -7,6 +7,15 @@ import { Upload } from "../components/Upload";
 import { Button } from "../components/Button";
 import { useNavigate, useParams } from "react-router";
 
+import { z, ZodError } from "zod";
+const refundSchema = z.object({
+  name: z.string().min(3, { message: "informe o nome" }),
+  category: z.string().min(1, { message: "informe a categoria" }),
+  amount: z.coerce
+    .number({ message: "informe o valor válido" })
+    .positive({ message: "informe o valor válido" }),
+});
+
 export function Refund() {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
@@ -22,8 +31,27 @@ export function Refund() {
     if (params.id) {
       return navigate(-1);
     }
-    navigate("/confirm", { state: { fromSubmit: true } });
+
+    try {
+      setIsLoading(true);
+      const data = refundSchema.parse({
+        name,
+        category,
+        amount: amount.replace(",",".")
+      })
+      
+      navigate("/confirm", { state: { fromSubmit: true } });
+    } catch (error) {
+      console.log(error);
+      if (error instanceof ZodError) {
+        return alert(error.issues[0].message);
+      }
+      alert("não foi possível realizar a solicitação");
+    } finally {
+      setIsLoading(false);
+    }
   }
+
   return (
     <form
       onSubmit={onSubmit}
@@ -69,7 +97,11 @@ export function Refund() {
         />
       </div>
       {params.id ? (
-        <a className="flex text-sm text-green-100  font-semibold items-center justify-center gap-2 my-6 hover:opacity-75 transition ease-linear"  href="https://www.google.com" target="_blank">
+        <a
+          className="flex text-sm text-green-100  font-semibold items-center justify-center gap-2 my-6 hover:opacity-75 transition ease-linear"
+          href="https://www.google.com"
+          target="_blank"
+        >
           <img src={fileSvg} alt="ícone de arquivo" />
           Abrir o comprovante
         </a>
